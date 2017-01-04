@@ -17,6 +17,7 @@ namespace transparent_auth_bot.Controllers
     [Authorize]
     public class WebChatController : ApiController
     {
+        private string botSecret = ConfigurationManager.AppSettings["BotSecret"];
         private string clientId = ConfigurationManager.AppSettings["ida:ClientId"];
         private string appKey = ConfigurationManager.AppSettings["ida:ClientSecret"];
         private string aadInstance = ConfigurationManager.AppSettings["ida:AADInstance"];
@@ -36,7 +37,7 @@ namespace transparent_auth_bot.Controllers
             botData.SetProperty<string>("GraphAccessToken", UserAccessToken);
             stateClient.BotState.SetUserDataAsync("webchat", userId, botData).Wait();
             string WebChatString =
-                new WebClient().DownloadString("https://webchat.botframework.com/embed/transparentauth?s=PJ6liqNOs3Q.cwA.Xv0.D-h-4BEcvEH_Om2DcLcJBu1B9GNAvKXh5uJUsve7A5k&userid=" +
+                new WebClient().DownloadString("https://webchat.botframework.com/embed/transparentauth?s="+botSecret+"&userid=" +
                 HttpUtility.UrlEncode(userId) + "&username=" + HttpUtility.UrlEncode(ClaimsPrincipal.Current.Identity.Name));            
             WebChatString = WebChatString.Replace("/css/botchat.css", "https://webchat.botframework.com/css/botchat.css");
             WebChatString = WebChatString.Replace("/scripts/botchat.js", "https://webchat.botframework.com/scripts/botchat.js");
